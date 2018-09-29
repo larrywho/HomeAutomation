@@ -17,8 +17,7 @@ def read_temp_raw():
    f.close()
    return lines
 def read_temp_raw_hang_fix():
-   catdata = subprocess.Popen(['cat',device_file], stdout=subprocess.PIPE, stder
-r=subprocess.PIPE)
+   catdata = subprocess.Popen(['cat',device_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
    out,err = catdata.communicate()
    out_decode = out.decode('utf-8')
    lines = out_decode.split('\n')
