@@ -38,8 +38,7 @@ if ($perform_authentication) {
 date_default_timezone_set('America/New_York');
 //CHECK IF GD IS INSTALLED
 $gd_installed=false;
-foreach(get_loaded_extensions() as $name){ if ($name=='gd') {$gd_installed=true;
-}}
+foreach(get_loaded_extensions() as $name){ if ($name=='gd') {$gd_installed=true;}}
 $rpi = array(
         //"Date" => date("h:i:sA Y-m-d"),
         "Date" => shell_exec('date +%T | tr -d \'\n\''),
