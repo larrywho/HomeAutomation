@@ -1,0 +1,10 @@
+ [Unit]
+ Description=Send temperature data to MQTT broker
+ After=multi-user.target
+
+ [Service]
+ Type=idle
+ ExecStart=/usr/bin/python /home/pi/mqtt-temp.py
+
+ [Install]
+ WantedBy=multi-user.target
