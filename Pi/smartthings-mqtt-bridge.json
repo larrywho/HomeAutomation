@@ -1,0 +1,9 @@
+{
+  "apps" : [{
+    "name"        : "smartthings-mqtt-bridge",
+    "script"      : "/usr/local/bin/smartthings-mqtt-bridge",
+    "env": {
+      "CONFIG_DIR": "/opt/smartthings-mqtt-bridge"
+    }
+  }]
+}
