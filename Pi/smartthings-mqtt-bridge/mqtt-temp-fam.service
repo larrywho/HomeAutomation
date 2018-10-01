@@ -1,0 +1,13 @@
+ [Unit]
+ Description=Send temperature data to MQTT broker
+ Requires=network-online.target
+ After=network-online.target
+
+ [Service]
+ Type=simple
+ ExecStart=/usr/bin/python /home/pi/mqtt-temp-fam.py
+ User=pi
+ Restart=on-failure
+
+ [Install]
+ WantedBy=multi-user.target
