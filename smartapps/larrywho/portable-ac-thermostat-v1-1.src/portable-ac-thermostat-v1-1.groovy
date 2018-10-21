@@ -82,8 +82,8 @@ def runApp()
    {
       def currentTime = now()
 
-      logger("DEBUG", "calling sensor.refresh()")
-      sensor.refresh()
+      //logger("DEBUG", "calling sensor.refresh()")
+      //sensor.refresh()
       meter.refresh()
 
       logger("DEBUG", "calling outletControl()")
