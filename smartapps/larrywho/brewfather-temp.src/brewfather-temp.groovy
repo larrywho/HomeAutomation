@@ -99,6 +99,7 @@ try {
 }
     logger("INFO", "Thermostat Temperature = ${thermostatTemp}F")
 }
+}
 
 private logger(level, logString)
 {
