@@ -88,8 +88,8 @@ private postTemperatureData()
 ]
 
 try {
-     httpPostJson(uri: streamURI, body: [name: "Pi", temp: thermostatTemp, 
-                   temp_unit: "F", beer: beer])
+     httpPostJson(uri: $streamURI, body: [name: "Pi", temp: $thermostatTemp, 
+                   temp_unit: "F", beer: $beer])
                    {response ->
         log.debug response.data
     }
