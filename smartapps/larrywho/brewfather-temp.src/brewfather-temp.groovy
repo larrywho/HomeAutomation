@@ -87,19 +87,29 @@ private postTemperatureData()
     //]
 //]
 
-try {
-     httpPostJson(uri: $streamURI, body: [name: "Pi", temp: $thermostatTemp, 
-                   temp_unit: "F", beer: $beer])
-                   {response ->
-        log.debug response.data
-    }
+    def params = [
+        uri: “http://log.brewfather.net/stream?id=${brewfatherStreamID}”,
+    body: [
+       name:“Pi”,
+       temp:${thermostatTemp},
+       temp_unit:“F”,
+       beer:“${beer}”
+    ]
+    ]
     
-    //httpPostJson(params) { resp ->
-    //    resp.headers.each {
-    //        log.debug "${it.name} : ${it.value}"
-    //    }
-    //    log.debug "response contentType: ${resp.contentType}"
+try {
+     //httpPostJson(uri: $streamURI, body: [name: "Pi", temp: $thermostatTemp, 
+     //              temp_unit: "F", beer: $beer])
+     //              {response ->
+     //   log.debug response.data
     //}
+    
+    httpPostJson(params) { resp ->
+        resp.headers.each {
+            log.debug "${it.name} : ${it.value}"
+        }
+        log.debug "response contentType: ${resp.contentType}"
+    }
 } catch (e) {
     log.debug "something went wrong: $e"
 }
