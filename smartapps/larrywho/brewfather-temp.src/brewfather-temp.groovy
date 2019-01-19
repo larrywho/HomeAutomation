@@ -77,15 +77,15 @@ private postTemperatureData()
     def thermostatTemp = thermostat.currentValue("temperature")
     def streamURI = "http://log.brewfather.net/stream?id=$brewfatherStreamID"
 
-    def params = [
-    uri: "http://log.brewfather.net/stream?id=$brewfatherStreamID",
-    body: [
-        param1: "name Pi"
-        param2: "temp $thermostatTemp"
-        param3: "temp_unit F"
-        param4: "beer $beer"
-    ]
-]
+    //def params = [
+    //uri: "http://log.brewfather.net/stream?id=$brewfatherStreamID",
+    //body: [
+    //    param1: "name Pi"
+    //    param2: "temp $thermostatTemp"
+    //    param3: "temp_unit F"
+    //    param4: "beer $beer"
+    //]
+//]
 
 try {
      httpPostJson(uri: $streamURI, body: [name: "Pi", temp: $thermostatTemp, 
