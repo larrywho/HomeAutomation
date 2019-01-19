@@ -90,10 +90,10 @@ private postTemperatureData()
     def params = [
         uri: “http://log.brewfather.net/stream?id=${brewfatherStreamID}”,
     body: [
-       name:“Pi”,
-       temp:${thermostatTemp},
-       temp_unit:“F”,
-       beer:“${beer}”
+       "name":“Pi”,
+       "temp":${thermostatTemp},
+       "temp_unit":“F”,
+       "beer":“${beer}”
     ]
     ]
     
