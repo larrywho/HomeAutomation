@@ -1,12 +1,12 @@
 /**
- *  Fan Controller - SmartApp v 1.0
+ *  Brewfather Temperature - SmartApp v 1.0
  *
  *  Author: 
  *    larrywho
  *
  *  Changelog:
  *
- *    1.0 (09/16/2018 by larrywho)
+ *    1.0 (01/19/2019 by larrywho)
  *      - Initial release
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -20,10 +20,10 @@
  *
  */
 definition(
-    name: "Fan Controller",
+    name: "Brewfather Temperature",
     author: "larrywho",
     namespace: "larrywho",
-    description: "Control a fan using a temperature sensor and a smart outlet.",
+    description: "Post temperature to Brewfather stream.",
     category: "My Apps",
     iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
     iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
@@ -31,11 +31,8 @@ definition(
 
 
 preferences {
-    section ("Fan Controller...") {
+    section ("Brewfather Temperature ...") {
         input "thermostat", "capability.temperatureMeasurement", title: "Thermostat", required: true, multiple: false
-        input "outlet", "capability.switch", title: "Outlet", required: true, multiple: false
-        input "thermostatOffThresh", "decimal", title: "Off Temperature Threshold", required: true
-        input "thermostatOnThresh", "decimal", title: "On Temperature Threshold", required: true
     }
 }
 
@@ -55,10 +52,7 @@ def updated() {
 
 def initialize() {
 
-    // turn the switch off
-    outlet.off()
-	
-    runEvery1Minute("runApp")
+    runEvery15Minutes("runApp")
 }
 
 
@@ -67,8 +61,8 @@ def runApp()
 {
    try
    {
-      logger("DEBUG", "calling switchControl()")
-      switchControl()
+      logger("DEBUG", "calling postTemperatureData()")
+      postTemperatureData()
    }
    catch (e)
    {
@@ -76,38 +70,30 @@ def runApp()
    }
 }
 
-private switchControl()
+private postTemperatureData()
 {
     def thermostatTemp = thermostat.currentValue("temperature")
-    def outletState = outlet.currentSwitch
-    def status = ""
-    
-    if ("on" == outletState)
-    {
-       if (thermostatTemp <= thermostatOffThresh)
-       {
-          outlet.off()
-          status = "turning fan off"
-       }
-       else
-       {
-          status = "leaving fan on"
-       }
+
+    def params = [
+    uri: "http://postcatcher.in/catchers/<yourUniquePath>",
+    body: [
+        param1: [subparam1: "subparam 1 value",
+                 subparam2: "subparam2 value"],
+        param2: "param2 value"
+    ]
+]
+
+try {
+    httpPostJson(params) { resp ->
+        resp.headers.each {
+            log.debug "${it.name} : ${it.value}"
+        }
+        log.debug "response contentType: ${resp.contentType}"
     }
-    else
-    {
-       if (thermostatTemp >= thermostatOnThresh)
-       {
-          outlet.on()
-          status = "turning fan on"
-       }
-       else
-       {
-          status = "leaving fan off"
-       }
-    }    
-    
-    logger("INFO", "Thermostat Temperature = ${thermostatTemp}F, State = ${outletState}, Status = ${status}")
+} catch (e) {
+    log.debug "something went wrong: $e"
+}
+    logger("INFO", "Thermostat Temperature = ${thermostatTemp}F")
 }
 
 private logger(level, logString)
