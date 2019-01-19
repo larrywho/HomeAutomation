@@ -30,21 +30,26 @@ definition(
     iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
 
 
-preferences {
-    section ("Brewfather Temperature ...") {
+preferences
+{
+    section ("Brewfather Temperature ...")
+    {
         input "thermostat", "capability.temperatureMeasurement", title: "Thermostat", required: true, multiple: false
         input "brewfatherStreamID", "text", title: "Brewfather Stream ID", required: true
         input "beer", "text", title: "Beer Name", required: true
-    }
+        input "appEnabled", type: "bool", title: "0=Disabled, 1=Enabled", required: true, defaultValue: false
+     }
 }
 
-def installed() {
+def installed()
+{
     logger("DEBUG", "Installed with settings: ${settings}")
 
     initialize()
 }
 
-def updated() {
+def updated()
+{
     logger("DEBUG", "Updated with settings: ${settings}")
 
     unsubscribe()
@@ -52,19 +57,24 @@ def updated() {
     initialize()
 }
 
-def initialize() {
-
+def initialize()
+{
     runEvery15Minutes("runApp")
 }
-
-
 
 def runApp()
 {
    try
    {
-      logger("DEBUG", "calling postTemperatureData()")
-      postTemperatureData()
+      if (appEnabled)
+      {
+         logger("DEBUG", "calling postTemperatureData()")
+         postTemperatureData()
+      }
+      else
+      {
+         logger("DEBUG", "not enabled")
+      }
    }
    catch (e)
    {
@@ -75,44 +85,18 @@ def runApp()
 private postTemperatureData()
 {
     def thermostatTemp = thermostat.currentValue("temperature")
-    def streamURI = "http://log.brewfather.net/stream?id=$brewfatherStreamID"
+    def streamURI = "http://log.brewfather.net/stream?id=${brewfatherStreamID}"
 
-    //def params = [
-    //uri: "http://log.brewfather.net/stream?id=$brewfatherStreamID",
-    //body: [
-    //    param1: "name Pi"
-    //    param2: "temp $thermostatTemp"
-    //    param3: "temp_unit F"
-    //    param4: "beer $beer"
-    //]
-//]
-
-    def params = [
-        uri: “http://log.brewfather.net/stream?id=${brewfatherStreamID}”,
-    body: [
-       "name":“Pi”,
-       "temp":${thermostatTemp},
-       "temp_unit":“F”,
-       "beer":“${beer}”
-    ]
-    ]
-    
-try {
-     //httpPostJson(uri: $streamURI, body: [name: "Pi", temp: $thermostatTemp, 
-     //              temp_unit: "F", beer: $beer])
-     //              {response ->
-     //   log.debug response.data
-    //}
-    
-    httpPostJson(params) { resp ->
-        resp.headers.each {
-            log.debug "${it.name} : ${it.value}"
-        }
-        log.debug "response contentType: ${resp.contentType}"
+    try
+    {
+       httpPostJson(uri: streamURI, body: ["name": "Brewhouse Temperature", "temp": thermostatTemp, 
+                   "temp_unit": "F", "beer": "$beer"])
+                   {response -> log.debug response.data}
+    } catch (e)
+    {
+       log.debug "something went wrong: $e"
     }
-} catch (e) {
-    log.debug "something went wrong: $e"
-}
+    
     logger("INFO", "Thermostat Temperature = ${thermostatTemp}F")
 }
 
