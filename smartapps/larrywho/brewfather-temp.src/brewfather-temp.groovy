@@ -33,6 +33,8 @@ definition(
 preferences {
     section ("Brewfather Temperature ...") {
         input "thermostat", "capability.temperatureMeasurement", title: "Thermostat", required: true, multiple: false
+        input "brewfatherStreamID", "text", title: "Brewfather Stream ID", required: true
+        input "beer", "text", title: "Beer Name", required: true
     }
 }
 
@@ -73,13 +75,15 @@ def runApp()
 private postTemperatureData()
 {
     def thermostatTemp = thermostat.currentValue("temperature")
+    def streamURI = "http://log.brewfather.net/stream?id=$brewfatherStreamID"
 
     def params = [
-    uri: "http://postcatcher.in/catchers/<yourUniquePath>",
+    uri: "http://log.brewfather.net/stream?id=$brewfatherStreamID",
     body: [
-        param1: [subparam1: "subparam 1 value",
-                 subparam2: "subparam2 value"],
-        param2: "param2 value"
+        param1: "name Pi"
+        param2: "temp $thermostatTemp"
+        param3: "temp_unit F"
+        param4: "beer $beer"
     ]
 ]
 
