@@ -88,17 +88,22 @@ private postTemperatureData()
 ]
 
 try {
-    httpPostJson(params) { resp ->
-        resp.headers.each {
-            log.debug "${it.name} : ${it.value}"
-        }
-        log.debug "response contentType: ${resp.contentType}"
+     httpPostJson(uri: streamURI, body: [name: "Pi", temp: thermostatTemp, 
+                   temp_unit: "F", beer: beer])
+                   {response ->
+        log.debug response.data
     }
+    
+    //httpPostJson(params) { resp ->
+    //    resp.headers.each {
+    //        log.debug "${it.name} : ${it.value}"
+    //    }
+    //    log.debug "response contentType: ${resp.contentType}"
+    //}
 } catch (e) {
     log.debug "something went wrong: $e"
 }
     logger("INFO", "Thermostat Temperature = ${thermostatTemp}F")
-}
 }
 
 private logger(level, logString)
