@@ -36,6 +36,7 @@ preferences {
         input "outlet", "capability.switch", title: "Outlet", required: true, multiple: false
         input "thermostatOffThresh", "decimal", title: "Off Temperature Threshold", required: true
         input "thermostatOnThresh", "decimal", title: "On Temperature Threshold", required: true
+	input "appEnabled", type: "bool", title: "0=Disabled, 1=Enabled", required: true, defaultValue: false
     }
 }
 
@@ -67,8 +68,15 @@ def runApp()
 {
    try
    {
-      logger("DEBUG", "calling switchControl()")
-      switchControl()
+      if (appEnabled)
+      {
+         logger("DEBUG", "calling switchControl()")
+         switchControl()
+      }
+      else
+      {
+         logger("DEBUG", "app not enabled")
+      }
    }
    catch (e)
    {
