@@ -70,7 +70,7 @@ def runApp()
 {
    try
    {
-      if (appEnabled)
+      if (1 == appEnabled.toInteger())
       {
 	 def currentTime = now()
          logger("DEBUG", "calling switchControl()")
