@@ -59,6 +59,7 @@ def initialize() {
 
     // turn the switch off
     outlet.off()
+    atomicState.outletOff = currentTime
 	
     runEvery1Minute("runApp")
 }
@@ -97,6 +98,8 @@ private switchControl(nowTime)
        if (thermostatTemp <= thermostatOffThresh)
        {
           outlet.off()
+	  atomicState.outletOff = nowTime
+
           status = "turning fan off"
        }
        else
@@ -104,7 +107,7 @@ private switchControl(nowTime)
           status = "leaving fan on"
        }
     }
-    else
+    else // "off" == outletState
     {
        if (thermostatTemp >= thermostatOnThresh &&
            atomicState.outletOff < (nowTime - (offWaitTime * 60000)))
