@@ -71,8 +71,9 @@ def runApp()
    {
       if (appEnabled)
       {
+	 def currentTime = now()
          logger("DEBUG", "calling switchControl()")
-         switchControl()
+         switchControl(currentTime)
       }
       else
       {
@@ -85,7 +86,7 @@ def runApp()
    }
 }
 
-private switchControl()
+private switchControl(nowTime)
 {
     def thermostatTemp = thermostat.currentValue("temperature")
     def outletState = outlet.currentSwitch
