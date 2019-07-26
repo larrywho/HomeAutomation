@@ -36,7 +36,7 @@ preferences {
         input "outlet", "capability.switch", title: "Outlet", required: true, multiple: false
         input "thermostatOffThresh", "decimal", title: "Off Temperature Threshold", required: true
         input "thermostatOnThresh", "decimal", title: "On Temperature Threshold", required: true
-	input "offWaitTime", "decimal", title: "Unit Off Max Time", required: true, defaultValue: 15
+	input "offWaitTime", "decimal", title: "Unit Off Min Time", required: true, defaultValue: 15
 	input "appEnabled", type: "bool", title: "0=Disabled, 1=Enabled", required: true, defaultValue: false
     }
 }
@@ -112,7 +112,6 @@ private switchControl(nowTime)
        if (thermostatTemp >= thermostatOnThresh &&
            atomicState.outletOff < (nowTime - (offWaitTime * 60000)))
        {
-          // TODO: before turning on, make sure outlet has been off for at least 5 minutes
 	  outlet.on()
           status = "turning fan on"
        }
