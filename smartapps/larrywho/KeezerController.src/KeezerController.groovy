@@ -98,7 +98,7 @@ private switchControl(nowTime)
        if (thermostatTemp <= thermostatOffThresh)
        {
           outlet.off()
-	  atomicState.outletOff = nowTime
+	  setOffTime(nowTime)
 
           status = "turning fan off"
        }
@@ -123,6 +123,17 @@ private switchControl(nowTime)
     }    
     
     logger("INFO", "Thermostat Temperature = ${thermostatTemp}F, State = ${outletState}, Status = ${status}")
+}
+
+private setOffTime(time)
+{
+    atomicState.outletOff = time
+
+    while (time != atomicState.outletOff)
+    {
+        logger("WARN", "atomicState.outletOff set didn't work, retrying")
+        atomicState.outletOff = time
+    }
 }
 
 private logger(level, logString)
