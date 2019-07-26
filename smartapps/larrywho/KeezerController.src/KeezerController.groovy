@@ -104,7 +104,8 @@ private switchControl()
     }
     else
     {
-       if (thermostatTemp >= thermostatOnThresh)
+       if (thermostatTemp >= thermostatOnThresh &&
+           atomicState.outletOff < (nowTime - (offWaitTime * 60000)))
        {
           // TODO: before turning on, make sure outlet has been off for at least 5 minutes
 	  outlet.on()
