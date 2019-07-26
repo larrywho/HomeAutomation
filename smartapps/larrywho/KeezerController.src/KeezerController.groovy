@@ -6,7 +6,7 @@
  *
  *  Changelog:
  *
- *    1.0 (09/16/2018 by larrywho)
+ *    1.0 (07/25/2019 by larrywho)
  *      - Initial release
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -106,7 +106,8 @@ private switchControl()
     {
        if (thermostatTemp >= thermostatOnThresh)
        {
-          outlet.on()
+          // TODO: before turning on, make sure outlet has been off for at least 5 minutes
+	  outlet.on()
           status = "turning fan on"
        }
        else
