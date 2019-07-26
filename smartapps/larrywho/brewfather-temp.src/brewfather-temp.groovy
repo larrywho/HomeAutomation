@@ -37,7 +37,7 @@ preferences
         input "thermostat", "capability.temperatureMeasurement", title: "Thermostat", required: true, multiple: false
         input "brewfatherStreamID", "text", title: "Brewfather Stream ID", required: true
         input "beer", "text", title: "Beer Name", required: true
-        input "appEnabled", type: "bool", title: "0=Disabled, 1=Enabled", required: true, defaultValue: false
+        input "appEnabled", "text", title: "0=Disabled, 1=Enabled", required: true, defaultValue: "0"
      }
 }
 
@@ -66,7 +66,7 @@ def runApp()
 {
    try
    {
-      if (appEnabled)
+      if (1 == appEnabled.toInteger())
       {
          logger("DEBUG", "calling postTemperatureData()")
          postTemperatureData()
