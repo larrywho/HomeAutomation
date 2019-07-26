@@ -37,7 +37,7 @@ preferences {
         input "thermostatOffThresh", "decimal", title: "Off Temperature Threshold", required: true
         input "thermostatOnThresh", "decimal", title: "On Temperature Threshold", required: true
 	input "offWaitTime", "decimal", title: "Unit Off Min Time", required: true, defaultValue: 15
-	input "appEnabled", type: "bool", title: "0=Disabled, 1=Enabled", required: true, defaultValue: false
+	input "appEnabled", "text", title: "0=Disabled, 1=Enabled", required: true, defaultValue: "0"
     }
 }
 
