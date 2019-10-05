@@ -10,6 +10,8 @@
  *      - Initial release
  *    1.1 (11/6/2017 by larrywho)
  *      - Modified to turn off less often
+ *    1.1 (10/5/2019 by larrywho)
+ *      - Added check to see if we are near high temp threshold before turning outlet off
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -124,9 +126,23 @@ private outletControl(nowTime)
              atomicState.acTimeInState < (nowTime - (fanWaitTime * 60000)))
     {
         logger("DEBUG", "in currPower <= powerThresh")
-        turnOutletOff(nowTime)
-        atomicState.lastState = "turning_outlet_off_fan"
-        status = "turning outlet off (killing fan)"
+	    
+	// Before turning outlet off, double check to see
+	// if we are near or over the highTempThresh.
+	// If we are, don't turn off the outlet.
+	if (currTemp < (highTempThresh - .5))
+	{
+           logger("DEBUG", "and currTemp < (highTempThresh - .5)")
+           turnOutletOff(nowTime)
+           atomicState.lastState = "turning_outlet_off_fan"
+           status = "turning outlet off (killing fan)"
+	}
+	else
+	{
+           logger("DEBUG", "and currTemp > (highTempThresh - .5)")
+           atomicState.lastState = "leaving_outlet_alone"		
+           status = "leaving outlet on because we are near the high temp threshold"
+	}
     }
 
     // If temp over threshold, and outlet is off, and has been off for at least 15 minutes,
@@ -145,8 +161,8 @@ private outletControl(nowTime)
     else
     {
         logger("DEBUG", " in leave alone")
-        status = "leaving outlet ${switchState}"
         atomicState.lastState = "leaving_outlet_alone"
+        status = "leaving outlet ${switchState}"
     }
 
     def timeInState
