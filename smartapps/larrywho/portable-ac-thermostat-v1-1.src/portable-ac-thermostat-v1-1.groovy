@@ -127,22 +127,22 @@ private outletControl(nowTime)
     {
         logger("DEBUG", "in currPower <= powerThresh")
 	    
-	// Before turning outlet off, double check to see
-	// if we are near or over the highTempThresh.
-	// If we are, don't turn off the outlet.
-	if (currTemp < (highTempThresh - .5))
-	{
+	    // Before turning outlet off, double check to see
+	    // if we are near or over the highTempThresh.
+	    // If we are, don't turn off the outlet.
+	    if (currTemp < (highTempThresh - 0.5))
+	    {
            logger("DEBUG", "and currTemp < (highTempThresh - .5)")
            turnOutletOff(nowTime)
            atomicState.lastState = "turning_outlet_off_fan"
            status = "turning outlet off (killing fan)"
-	}
-	else
-	{
+	    }
+	    else
+	    {
            logger("DEBUG", "and currTemp > (highTempThresh - .5)")
            atomicState.lastState = "leaving_outlet_alone"		
            status = "leaving outlet on because we are near the high temp threshold"
-	}
+	    }
     }
 
     // If temp over threshold, and outlet is off, and has been off for at least 15 minutes,
