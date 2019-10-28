@@ -23,6 +23,7 @@ metadata {
         capability "Temperature Measurement"
         capability "Sensor"
         
+        attribute "date","string"
         attribute "name","string"
         attribute "temperature","string"
         attribute "temp_units","string"
@@ -34,6 +35,7 @@ metadata {
         // custom commands
         command "parse"     // (String "temperature:<value>")
         command "set"
+        command "setDate"
         command "setName"
         command "setGravity"
         command "setSignalStrength"
@@ -43,6 +45,9 @@ metadata {
     }
 
     tiles(scale:1) {
+        valueTile("date", "device.date") {
+            state("date", label:'${currentValue}', defaultState: true)
+        }    
         valueTile("name", "device.name") {
             state("name", label:'Name\r\n ${currentValue}', defaultState: true)
         }    
@@ -65,8 +70,8 @@ metadata {
             state("battery", label:'Battery\r\n ${currentValue}', defaultState: true)            
         }
 
-        main(["gravity"])
-        details(["name","temperature","temp_units","battery","tilt","signal","gravity"])
+        main(["date"])
+        details(["date","name","temperature","temp_units","battery","tilt","signal","gravity"])
     }
 
     simulator {
@@ -127,6 +132,11 @@ def parse(String message) {
 
     TRACE("event: (${event})")
     sendEvent(event)
+}
+
+def setDate(value) {
+    TRACE("date: ${value}")
+    sendEvent(name: "date", value: "${value}")
 }
 
 def setName(value) {
