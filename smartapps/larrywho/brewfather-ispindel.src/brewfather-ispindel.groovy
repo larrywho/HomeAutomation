@@ -34,7 +34,7 @@ preferences
 {
     section ("Brewfather iSpindel ...")
     {
-        input "ispindel", "capability.temperatureMeasurement", title: "ispindel", required: true, multiple: false
+        input "ispindel", "capability.temperatureMeasurement", title: "ispindel", required: true, multiple: true
         input "brewfatherStreamID", "text", title: "Brewfather Stream ID", required: true
         input "appEnabled", "text", title: "0=Disabled, 1=Enabled", required: true, defaultValue: "0"
      }
@@ -83,31 +83,44 @@ def runApp()
 
 private postiSpindelData()
 {
-    def name = ispindel.currentValue("iname")
-    def temp = ispindel.currentValue("itemperature")
-    def temp_units = ispindel.currentValue("itempunits")
-    def gravity = ispindel.currentValue("igravity")
-    def tilt = ispindel.currentValue("itilt")
-    def signal = ispindel.currentValue("iRSSI")
-    def battery = ispindel.currentValue("ibattery")
-    def streamURI = "http://log.brewfather.net/ispindel?id=${brewfatherStreamID}"
+    for (i in ispindel) {
+       
+       def name = i.currentValue("name")
+       def temp = i.currentValue("temperature")
+       def temp_units = i.currentValue("temp_units")
+       def gravity = i.currentValue("gravity")
+       def tilt = i.currentValue("tilt")
+       def signal = i.currentValue("signal")
+       def battery = i.currentValue("battery")
+       def streamURI = "http://log.brewfather.net/ispindel?id=${brewfatherStreamID}"
 
-    try
-    {
-       httpPostJson(uri: streamURI, body: ["name": name,
-                                           "angle": tilt,
-                                           "temperature": temp, 
-                                           "temp_units": temp_units,
-                                           "battery": battery,
-                                           "gravity": gravity,
-                                           "RSSI": signal])
-                   {response -> log.debug response.data}
-    } catch (e)
-    {
-       log.debug "something went wrong: $e"
+       logger("INFO", "Name = $name")
+       logger("INFO", "Temperature = $temp")
+       logger("INFO", "Temp Units = $temp_units")
+       logger("INFO", "Gravity = $gravity")
+       logger("INFO", "Tilt = $tilt")
+       logger("INFO", "Signal = $signal")
+       logger("INFO", "Battery = $battery")
+       
+       if (name?.trim())
+       {
+          try
+          {
+             httpPostJson(uri: streamURI, body: ["name": name,
+                                                 "angle": tilt,
+                                                 "temperature": temp, 
+                                                 "temp_units": temp_units,
+                                                 "battery": battery,
+                                                 "gravity": gravity,
+                                                 "RSSI": signal])
+                          {response -> log.debug response.data}
+          }
+          catch (e)
+          {
+             log.debug "something went wrong: $e"
+          }
+       }
     }
-    
-    logger("INFO", "Thermostat Temperature = ${thermostatTemp}F")
 }
 
 private logger(level, logString)
