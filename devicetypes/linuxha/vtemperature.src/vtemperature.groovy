@@ -26,29 +26,25 @@ metadata {
     definition (name:"vTemperature", namespace:"linuxha", author:"geko@statusbits.com") {
         capability "Temperature Measurement"
         capability "Sensor"
+        
+        attribute "date","string"
 
         // custom commands
         command "parse"     // (String "temperature:<value>")
         command "set"
+        command "setDate"
     }
 
-    tiles {
-        valueTile("temperature", "device.temperature", width: 2, height: 2) {
-            state("temperature", label:'${currentValue}°', unit:"F",
-                backgroundColors:[
-                    [value: 31, color: "#153591"],
-                    [value: 44, color: "#1e9cbb"],
-                    [value: 59, color: "#90d2a7"],
-                    [value: 74, color: "#44b621"],
-                    [value: 84, color: "#f1d801"],
-                    [value: 95, color: "#d04e00"],
-                    [value: 96, color: "#bc2323"]
-                ]
-            )
-        }
+    tiles(scale:1) {
+        valueTile("date", "device.date") {
+            state("date", label:'${currentValue}', defaultState: true)
+        }    
+        valueTile("temperature", "device.temperature") {
+            state("temperature", label:'${currentValue}°', defaultState: true)
+        }    
 
         main(["temperature"])
-        details(["temperature"])
+        details(["date","temperature"])
     }
 
     simulator {
@@ -82,6 +78,11 @@ def parse(String message) {
 def set(value) {
     TRACE("vTemperature: ${value}")
     sendEvent(name: "temperature", value: "${value}")
+}
+
+def setDate(value) {
+    TRACE("date: ${value}")
+    sendEvent(name: "date", value: "${value}")
 }
 
 private def TRACE(message) {
